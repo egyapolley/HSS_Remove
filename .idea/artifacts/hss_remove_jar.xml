@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="hss_remove_jar">
+    <output-path>$USER_HOME$/Documents/Project_Tools</output-path>
+    <root id="archive" name="hss_remove.jar">
+      <element id="module-output" name="HSS_Remove" />
+      <element id="extracted-dir" path="$USER_HOME$/Documents/Project_Tools/mysql-connector-java-5.1.48/mysql-connector-java-5.1.48-bin.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
