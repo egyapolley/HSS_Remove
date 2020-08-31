@@ -7,6 +7,8 @@ import javax.xml.soap.SOAPMessage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
@@ -31,11 +33,11 @@ public class Main_JDK6 {
 
             String file_name = properties.getProperty("file.name");
 
-            //String SQL = "insert into vodafoneAccts (msisdn, imsi, iccid,profileID, authkeys, fileName) values(?,?,?,?,?,?)";
-            //Connection connection = DatabaseUtils.getConnection(url, username, password);
-            //if (connection != null) {
+            String SQL = "delete from vodafoneAccts where msisdn= ?";
+            Connection connection = DatabaseUtils.getConnection(url, username, password);
+            if(connection != null){
 
-            //PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL);
 
 
             try {
@@ -74,7 +76,7 @@ public class Main_JDK6 {
                             boolean keysDeletestatus = authentication_keys.processSOAPResponse(soapResponsekeys);
                             if (keysDeletestatus) {
                                 deleteSuccess = true;
-                                System.out.println(dataSet.getMsisdn() + "  successfully deleted");
+                                System.out.println(dataSet.getMsisdn() + "  successfully deleted on HSS");
                                 counter++;
                             }
 
@@ -90,15 +92,10 @@ public class Main_JDK6 {
 
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyMMddHHmmss");
                         String outputFile = output_dir_prop + "/" + simpleDateFormat.format(new Date()) + "-" + file_name;
-                        //boolean fileMoveStatus = fileInput.renameTo(new File(outputFile));
-//
-//                            preparedStatement.setString(1, dataSet.getMsisdn());
-//                            preparedStatement.setString(2, dataSet.getImsi());
-//                            preparedStatement.setString(3, dataSet.getIccid());
-//                            preparedStatement.setString(4, dataSet.getProfileID());
-//                            preparedStatement.setString(5, dataSet.getKeys());
-//                            preparedStatement.setString(6, outputFile);
-//                            preparedStatement.executeUpdate();
+                        fileInput.renameTo(new File(outputFile));
+                            preparedStatement.setString(1, dataSet.getMsisdn());
+                            preparedStatement.executeUpdate();
+                        System.out.println(dataSet.getMsisdn()+ " successfully deleted on Local DB");
                     }
                     deleteSuccess = false;
 
@@ -110,10 +107,9 @@ public class Main_JDK6 {
                 e.printStackTrace();
             }
 
-            // }
-            //if (connection != null) {
-            // connection.close();
-            // }
+            }
+            assert connection != null;
+            connection.close();
         } catch (Exception e) {
             e.printStackTrace();
 
